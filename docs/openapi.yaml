@@ -1,0 +1,683 @@
+openapi: 3.1.0
+info:
+  title: CPIP Backend API
+  version: 1.0.0
+  description: Corporate Project Intelligence Platform API
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /auth/login:
+    post:
+      summary: Login user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+  /auth/refresh:
+    post:
+      summary: Rotate refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+  /auth/logout:
+    post:
+      summary: Logout session
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+  /auth/mfa/verify:
+    post:
+      summary: Verify TOTP MFA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MFAVerifyRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+
+  /users:
+    get:
+      summary: List users
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpsertRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+  /users/{id}:
+    get:
+      summary: Get user
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    put:
+      summary: Update user
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpsertRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    delete:
+      summary: Delete user
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /portfolios:
+    get:
+      summary: List portfolios
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Create portfolio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioUpsertRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+  /portfolios/{id}:
+    get:
+      summary: Get portfolio
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    put:
+      summary: Update portfolio
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioUpsertRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /projects:
+    get:
+      summary: List projects
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Create project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpsertRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+  /projects/{id}:
+    get:
+      summary: Get project
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    put:
+      summary: Update project
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpsertRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    delete:
+      summary: Archive project
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /projects/{id}/financials:
+    get:
+      summary: Get project financial snapshots
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Upsert project financial snapshot
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinancialUpsertRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /resources:
+    get:
+      summary: List resources
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Create resource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+  /resources/allocations:
+    get:
+      summary: Get resource allocations
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /vendors:
+    get:
+      summary: List vendors
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Create vendor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VendorCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+  /vendors/{id}:
+    get:
+      summary: Get vendor
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /risks:
+    get:
+      summary: List risks
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Create risk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiskUpsertRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+  /risks/{id}:
+    put:
+      summary: Update risk
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiskUpsertRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /issues:
+    get:
+      summary: List issues
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Create issue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /change-requests:
+    get:
+      summary: List change requests
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Create change request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeRequestCreate'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /governance-reviews:
+    get:
+      summary: List governance reviews
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+    post:
+      summary: Create governance review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GovernanceCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/Success'
+
+  /imports:
+    post:
+      summary: Submit import job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportCreateRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/Success'
+  /imports/jobs:
+    get:
+      summary: List import jobs
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+  /imports/errors:
+    get:
+      summary: List import errors
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /analytics/executive-summary:
+    get:
+      summary: Executive analytics summary
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+  /analytics/portfolio-health:
+    get:
+      summary: Portfolio health analytics
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+  /analytics/financial-performance:
+    get:
+      summary: Financial performance analytics
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+  /analytics/resource-utilization:
+    get:
+      summary: Resource utilization analytics
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+  /analytics/risk-exposure:
+    get:
+      summary: Risk exposure analytics
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /reports/generate:
+    post:
+      summary: Generate report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportGenerateRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/Success'
+  /reports:
+    get:
+      summary: List reports
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+  /reports/{id}:
+    get:
+      summary: Get report
+      parameters:
+        - $ref: '#/components/parameters/PathID'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+  /audit-logs:
+    get:
+      summary: List audit logs
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    PathID:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Success:
+      description: Success response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessEnvelope'
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+  schemas:
+    SuccessEnvelope:
+      type: object
+      properties:
+        success:
+          type: boolean
+          const: true
+        data:
+          type: object
+          additionalProperties: true
+        meta:
+          type: object
+          additionalProperties: true
+      required: [success, data]
+    ErrorEnvelope:
+      type: object
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+          required: [code, message]
+        request_id:
+          type: string
+      required: [success, error]
+    LoginRequest:
+      type: object
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8 }
+        tenant_code: { type: string }
+      required: [email, password, tenant_code]
+    RefreshRequest:
+      type: object
+      properties:
+        refresh_token: { type: string }
+      required: [refresh_token]
+    MFAVerifyRequest:
+      type: object
+      properties:
+        challenge_id: { type: string }
+        totp_code: { type: string, minLength: 6, maxLength: 6 }
+      required: [challenge_id, totp_code]
+    UserUpsertRequest:
+      type: object
+      properties:
+        email: { type: string, format: email }
+        name: { type: string, minLength: 2, maxLength: 150 }
+        password: { type: string, minLength: 8 }
+        role_ids:
+          type: array
+          items: { type: string, format: uuid }
+      required: [name]
+    PortfolioUpsertRequest:
+      type: object
+      properties:
+        code: { type: string, minLength: 2, maxLength: 40 }
+        name: { type: string, minLength: 2, maxLength: 200 }
+        owner_user_id: { type: string, format: uuid }
+      required: [code, name, owner_user_id]
+    ProjectUpsertRequest:
+      type: object
+      properties:
+        portfolio_id: { type: string, format: uuid }
+        code: { type: string, minLength: 2, maxLength: 50 }
+        name: { type: string, minLength: 2, maxLength: 250 }
+        manager_user_id: { type: string, format: uuid }
+      required: [portfolio_id, code, name, manager_user_id]
+    FinancialUpsertRequest:
+      type: object
+      properties:
+        as_of_date: { type: string, format: date }
+        currency: { type: string, minLength: 3, maxLength: 3 }
+        budget: { type: number, minimum: 0 }
+        actual: { type: number, minimum: 0 }
+        forecast: { type: number, minimum: 0 }
+      required: [as_of_date, currency, budget, actual, forecast]
+    ResourceCreateRequest:
+      type: object
+      properties:
+        employee_code: { type: string, minLength: 2, maxLength: 50 }
+        name: { type: string, minLength: 2, maxLength: 150 }
+        role_title: { type: string, minLength: 2, maxLength: 100 }
+        manager_user_id: { type: string, format: uuid }
+      required: [employee_code, name, role_title]
+    VendorCreateRequest:
+      type: object
+      properties:
+        code: { type: string, minLength: 2, maxLength: 40 }
+        name: { type: string, minLength: 2, maxLength: 200 }
+        category: { type: string, minLength: 2, maxLength: 80 }
+      required: [code, name, category]
+    RiskUpsertRequest:
+      type: object
+      properties:
+        project_id: { type: string, format: uuid }
+        code: { type: string, minLength: 2, maxLength: 40 }
+        title: { type: string, minLength: 2, maxLength: 250 }
+        likelihood: { type: integer, minimum: 1, maximum: 5 }
+        impact: { type: integer, minimum: 1, maximum: 5 }
+        owner_user_id: { type: string, format: uuid }
+      required: [project_id, code, title, likelihood, impact, owner_user_id]
+    IssueCreateRequest:
+      type: object
+      properties:
+        project_id: { type: string, format: uuid }
+        code: { type: string, minLength: 2, maxLength: 40 }
+        title: { type: string, minLength: 2, maxLength: 250 }
+        severity: { type: string, enum: [low, medium, high, critical] }
+      required: [project_id, code, title, severity]
+    ChangeRequestCreate:
+      type: object
+      properties:
+        project_id: { type: string, format: uuid }
+        code: { type: string, minLength: 2, maxLength: 40 }
+        change_type: { type: string, enum: [scope, budget, timeline, quality] }
+        impact_cost: { type: number, minimum: 0 }
+        impact_days: { type: integer, minimum: 0 }
+        description: { type: string, minLength: 5, maxLength: 2000 }
+      required: [project_id, code, change_type, impact_cost, impact_days, description]
+    GovernanceCreateRequest:
+      type: object
+      properties:
+        project_id: { type: string, format: uuid }
+        review_date: { type: string, format: date }
+        outcome: { type: string, enum: [approved, conditional, rejected] }
+        notes: { type: string }
+      required: [project_id, review_date, outcome]
+    ImportCreateRequest:
+      type: object
+      properties:
+        source_type: { type: string, enum: [excel, csv, erp_export, api] }
+        file_ref: { type: string }
+        template_id: { type: string, format: uuid }
+      required: [source_type, file_ref, template_id]
+    ReportGenerateRequest:
+      type: object
+      properties:
+        report_type: { type: string, enum: [executive, portfolio, financial, resource, risk, vendor] }
+        format: { type: string, enum: [pdf, xlsx, csv] }
+        filters:
+          type: object
+          additionalProperties: true
+      required: [report_type, format]

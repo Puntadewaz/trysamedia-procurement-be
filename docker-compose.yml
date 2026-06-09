@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: cpip-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cpip
+    ports:
+      - "5432:5432"
+    volumes:
+      - cpip_db_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+    container_name: cpip-app
+    depends_on:
+      - db
+    environment:
+      HTTP_ADDR: ":8080"
+      DATABASE_URL: "postgres://postgres:postgres@db:5432/cpip?sslmode=disable"
+      JWT_ISSUER: "cpip"
+      JWT_AUDIENCE: "cpip-api"
+      JWT_ACCESS_SECRET: "change-me-access"
+      JWT_REFRESH_SECRET: "change-me-refresh"
+    ports:
+      - "8080:8080"
+
+volumes:
+  cpip_db_data:
