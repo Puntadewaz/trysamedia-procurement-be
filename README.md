@@ -81,9 +81,23 @@ $env:HTTP_ADDR=":8081"
 go run ./cmd/server
 ```
 
+## API Documentation
+
+Interactive Swagger UI is served by the running server:
+
+- **Swagger UI:** `GET /docs`
+- **OpenAPI spec:** `GET /docs/openapi.yaml`
+- **Human-readable reference:** [docs/API.md](docs/API.md)
+- **Source OpenAPI file:** [docs/openapi.yaml](docs/openapi.yaml)
+
+```bash
+go run ./cmd/server
+# open http://localhost:8080/docs
+```
+
 ## OpenAPI
 
-`docs/openapi.yaml`
+See [docs/openapi.yaml](docs/openapi.yaml) and [docs/API.md](docs/API.md).
 
 ## Migrations
 

@@ -7,6 +7,7 @@ import (
 	"cpip/internal/analytics"
 	"cpip/internal/audit"
 	"cpip/internal/change_request"
+	"cpip/internal/docs"
 	"cpip/internal/financial"
 	"cpip/internal/governance"
 	"cpip/internal/iam"
@@ -34,6 +35,8 @@ type Dependencies struct {
 }
 
 func RegisterRoutes(app *fiber.App, deps Dependencies) {
+	docs.RegisterRoutes(app)
+
 	app.Get("/healthz", func(c fiber.Ctx) error {
 		return response.Success(c, fiber.StatusOK, fiber.Map{"status": "ok"}, nil)
 	})
