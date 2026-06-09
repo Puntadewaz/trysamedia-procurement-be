@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 type Config struct {
 	HTTPAddr         string
@@ -15,9 +18,18 @@ type Config struct {
 	JWTRefreshSecret string
 }
 
+// ResolveHTTPAddr returns the listen address for long-running servers.
+// On Vercel/Railway/Render, PORT is injected and must take precedence over HTTP_ADDR.
+func ResolveHTTPAddr() string {
+	if port := strings.TrimSpace(os.Getenv("PORT")); port != "" {
+		return ":" + port
+	}
+	return getEnv("HTTP_ADDR", ":8080")
+}
+
 func Load() Config {
 	return Config{
-		HTTPAddr:         getEnv("HTTP_ADDR", ":8080"),
+		HTTPAddr:         ResolveHTTPAddr(),
 		DatabaseURL:      getEnv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/cpip?sslmode=disable"),
 		SupabaseDBURL:    os.Getenv("SUPABASE_DB_URL"),
 		SupabaseURL:      os.Getenv("SUPABASE_URL"),

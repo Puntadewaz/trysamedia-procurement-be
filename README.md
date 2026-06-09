@@ -45,6 +45,11 @@ This repository includes `vercel.json` and a serverless handler at `api/index.go
 Vercel cannot import Go `internal/` packages from `api/`. Bootstrap lives in `pkg/app` for that reason.
 The handler uses `adaptor.FiberApp` to bridge Fiber v3 (fasthttp) to `net/http`.
 
+Important:
+- Do **not** set a custom Start Command to `cmd/server` on Vercel.
+- Do **not** set `HTTP_ADDR` in Vercel env (it overrides the platform `PORT` for server mode).
+- Vercel should deploy `api/index.go` as a serverless function (see `vercel.json`).
+
 Required Vercel environment variables:
 
 - `SUPABASE_DB_URL` (or `DATABASE_URL`)

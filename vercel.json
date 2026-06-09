@@ -1,8 +1,21 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/api/index.go"
+      "src": "api/index.go",
+      "use": "@vercel/go"
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.go"
+    }
+  ],
+  "functions": {
+    "api/index.go": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
 }
