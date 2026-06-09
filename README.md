@@ -42,6 +42,9 @@ Integration status endpoint:
 
 This repository includes `vercel.json` and a serverless handler at `api/index.go`.
 
+Vercel cannot import Go `internal/` packages from `api/`. Bootstrap lives in `pkg/app` for that reason.
+The handler uses `adaptor.FiberApp` to bridge Fiber v3 (fasthttp) to `net/http`.
+
 Required Vercel environment variables:
 
 - `SUPABASE_DB_URL` (or `DATABASE_URL`)

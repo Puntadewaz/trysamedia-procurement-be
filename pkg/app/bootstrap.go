@@ -34,13 +34,13 @@ func Bootstrap() (*Runtime, error) {
 	}
 
 	jobQueue := jobs.NewInMemoryQueue(logr)
-	app := fiber.New(fiber.Config{
+	fiberApp := fiber.New(fiber.Config{
 		AppName:      "CPIP Backend",
 		ServerHeader: "cpip",
 		ErrorHandler: middleware.ErrorHandler,
 	})
-	middleware.RegisterGlobal(app, logr)
-	api.RegisterRoutes(app, api.Dependencies{
+	middleware.RegisterGlobal(fiberApp, logr)
+	api.RegisterRoutes(fiberApp, api.Dependencies{
 		Config:   cfg,
 		Logger:   logr,
 		DB:       dbpool,
@@ -52,6 +52,6 @@ func Bootstrap() (*Runtime, error) {
 		Logger:   logr,
 		DB:       dbpool,
 		JobQueue: jobQueue,
-		App:      app,
+		App:      fiberApp,
 	}, nil
 }

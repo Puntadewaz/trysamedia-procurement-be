@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"cpip/internal/app"
+	"cpip/pkg/app"
 )
 
 func main() {

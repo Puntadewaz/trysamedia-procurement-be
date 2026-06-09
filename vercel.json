@@ -1,18 +1,8 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/index.go",
-      "use": "@vercel/go"
+      "source": "/(.*)",
+      "destination": "/api/index.go"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "api/index.go"
-    }
-  ],
-  "env": {
-    "HTTP_ADDR": ":8080"
-  }
+  ]
 }
