@@ -38,6 +38,12 @@ func RegisterRoutes(app *fiber.App, deps Dependencies) {
 		return response.Success(c, fiber.StatusOK, fiber.Map{"status": "ok"}, nil)
 	})
 	app.Get("/readyz", func(c fiber.Ctx) error {
+		if deps.DB == nil {
+			return response.Error(c, fiber.StatusServiceUnavailable, "DB_NOT_READY", "database not connected")
+		}
+		if err := deps.DB.Ping(c.Context()); err != nil {
+			return response.Error(c, fiber.StatusServiceUnavailable, "DB_NOT_READY", "database ping failed")
+		}
 		return response.Success(c, fiber.StatusOK, fiber.Map{"status": "ready"}, nil)
 	})
 

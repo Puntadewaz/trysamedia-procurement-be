@@ -24,13 +24,15 @@ func Bootstrap() (*Runtime, error) {
 	cfg := config.Load()
 	logr := logger.New()
 
+	var dbpool *pgxpool.Pool
 	dsn, err := database.ResolveDatabaseURL(cfg)
 	if err != nil {
-		return nil, err
-	}
-	dbpool, err := database.NewPostgresPool(dsn)
-	if err != nil {
-		return nil, err
+		logr.Error("database url not configured", map[string]any{"error": err.Error()})
+	} else {
+		dbpool, err = database.NewPostgresPool(dsn)
+		if err != nil {
+			logr.Error("database connection failed; continuing without db", map[string]any{"error": err.Error()})
+		}
 	}
 
 	jobQueue := jobs.NewInMemoryQueue(logr)

@@ -40,15 +40,15 @@ Integration status endpoint:
 
 ## Deploy to Vercel
 
-This repository includes `vercel.json` and a serverless handler at `api/index.go`.
+Vercel auto-detects this project as a **Go server** via `cmd/server/main.go`.
 
-Vercel cannot import Go `internal/` packages from `api/`. Bootstrap lives in `pkg/app` for that reason.
-The handler uses `adaptor.FiberApp` to bridge Fiber v3 (fasthttp) to `net/http`.
+Setup in Vercel dashboard:
+1. **Framework Preset:** `Go`
+2. **Root Directory:** repository root (where `go.mod` is)
+3. **Do not set** a custom Start Command
+4. **Remove** `HTTP_ADDR` from Vercel env vars (Vercel injects `PORT`)
 
-Important:
-- Do **not** set a custom Start Command to `cmd/server` on Vercel.
-- Do **not** set `HTTP_ADDR` in Vercel env (it overrides the platform `PORT` for server mode).
-- Vercel should deploy `api/index.go` as a serverless function (see `vercel.json`).
+The server uses `net/http` + `adaptor.FiberApp` and listens on `PORT`.
 
 Required Vercel environment variables:
 
